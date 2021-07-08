@@ -21,6 +21,7 @@ class TasksFragment : Fragment(R.layout.fragment_tasks) {
         tasksViewModel.tasks.observe(viewLifecycleOwner) {
             tasksAdapter.submitList(it)
         }
+
         binding.apply {
             recyclerViewTasks.apply {
                 adapter = tasksAdapter
