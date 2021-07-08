@@ -1,8 +1,9 @@
-package me.ajay.tasks
+package me.ajay.tasks.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import dagger.hilt.android.AndroidEntryPoint
+import me.ajay.tasks.R
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {

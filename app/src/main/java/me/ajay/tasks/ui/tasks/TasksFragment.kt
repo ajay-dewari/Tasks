@@ -1,4 +1,4 @@
-package me.ajay.tasks.ui
+package me.ajay.tasks.ui.tasks
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels

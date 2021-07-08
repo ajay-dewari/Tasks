@@ -1,4 +1,4 @@
-package me.ajay.tasks.ui
+package me.ajay.tasks.ui.tasks
 
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
