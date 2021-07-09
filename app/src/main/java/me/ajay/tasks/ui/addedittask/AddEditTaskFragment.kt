@@ -5,9 +5,11 @@ import android.view.View
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import dagger.hilt.android.AndroidEntryPoint
 import me.ajay.tasks.R
 import me.ajay.tasks.databinding.FragmentAddEditTaskBinding
 
+@AndroidEntryPoint
 class AddEditTaskFragment : Fragment(R.layout.fragment_add_edit_task) {
 
     private val viewModel: AddEditTaskViewModel by viewModels()

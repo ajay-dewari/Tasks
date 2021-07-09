@@ -9,6 +9,7 @@ import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -56,6 +57,10 @@ class TasksFragment : Fragment(R.layout.fragment_tasks), TasksAdapter.OnItemClic
                     tasksViewModel.onTaskSwiped(task)
                 }
             }).attachToRecyclerView(recyclerViewTasks)
+
+            fabAddTask.setOnClickListener {
+                tasksViewModel.onAddNewTaskClick()
+            }
         }
 
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
@@ -66,6 +71,14 @@ class TasksFragment : Fragment(R.layout.fragment_tasks), TasksAdapter.OnItemClic
                             .setAction("UNDO") {
                                 tasksViewModel.onUndoDeleteClick(event.task)
                             }.show()
+                    }
+                    is TasksViewModel.TasksEvent.NavigateToAddTaskScreen -> {
+                        val action = TasksFragmentDirections.actionTasksFragmentToAddEditTaskFragment(null, "New Task")
+                        findNavController().navigate(action)
+                    }
+                    is TasksViewModel.TasksEvent.NavigateToEditTaskScreen -> {
+                        val action = TasksFragmentDirections.actionTasksFragmentToAddEditTaskFragment(event.task, "Edit Task")
+                        findNavController().navigate(action)
                     }
                 }
             }
@@ -105,7 +118,7 @@ class TasksFragment : Fragment(R.layout.fragment_tasks), TasksAdapter.OnItemClic
             }
             R.id.action_hide_completed_tasks -> {
                 item.isChecked = !item.isChecked
-                tasksViewModel.hideCompleted.value = item.isChecked
+                tasksViewModel.onHideCompletedClick(item.isChecked)
                 true
             }
             R.id.action_delete_all_completed_tasks -> {
