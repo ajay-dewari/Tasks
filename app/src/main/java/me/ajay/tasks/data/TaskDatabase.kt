@@ -24,8 +24,8 @@ abstract class TaskDatabase : RoomDatabase() {
                 dao.insert(Task("Do dusting"))
                 dao.insert(Task("Go to Market"))
                 dao.insert(Task("Buy Grocery"))
-                dao.insert(Task("Finish Homework"))
-                dao.insert(Task("Call Fin"))
+                dao.insert(Task("Finish Homework", completed = true))
+                dao.insert(Task("Call Fin", important = true))
             }
 
         }

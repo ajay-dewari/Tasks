@@ -8,16 +8,19 @@ import android.view.View
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import me.ajay.tasks.R
+import me.ajay.tasks.data.Task
 import me.ajay.tasks.databinding.FragmentTasksBinding
 import me.ajay.tasks.utils.onQueryTextChanged
 
 @AndroidEntryPoint
-class TasksFragment : Fragment(R.layout.fragment_tasks) {
+class TasksFragment : Fragment(R.layout.fragment_tasks), TasksAdapter.OnItemClickListener {
     private val tasksViewModel : TasksViewModel by viewModels()
-    private val tasksAdapter = TasksAdapter()
+    private val tasksAdapter = TasksAdapter(this)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -37,6 +40,14 @@ class TasksFragment : Fragment(R.layout.fragment_tasks) {
         setHasOptionsMenu(true)
     }
 
+    override fun onItemClick(task: Task) {
+        tasksViewModel.onTaskSelected(task)
+    }
+
+    override fun onCheckBoxClick(task: Task, isChecked: Boolean) {
+        tasksViewModel.onTaskCheckedChanged(task, isChecked)
+    }
+
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
         inflater.inflate(R.menu.menu_fragment_tasks, menu)
@@ -51,11 +62,11 @@ class TasksFragment : Fragment(R.layout.fragment_tasks) {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when(item.itemId) {
             R.id.action_sort_by_name -> {
-                tasksViewModel.sortOrder.value = SortOrder.BY_NAME
+                tasksViewModel.onSortOrderSelected(SortOrder.BY_NAME)
                 true
             }
             R.id.action_sort_by_date_created -> {
-                tasksViewModel.sortOrder.value = SortOrder.BY_DATE
+                tasksViewModel.onSortOrderSelected(SortOrder.BY_DATE)
                 true
             }
             R.id.action_hide_completed_tasks -> {
