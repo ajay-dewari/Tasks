@@ -4,20 +4,24 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import me.ajay.tasks.data.Task
 import me.ajay.tasks.data.TasksDao
 import javax.inject.Inject
 
 @HiltViewModel
-class TasksViewModel @Inject constructor(private val tasksDao : TasksDao) : ViewModel() {
+class TasksViewModel @Inject constructor(private val tasksDao: TasksDao) : ViewModel() {
 
     val searchQuery = MutableStateFlow("")
-    val sortOrder = MutableStateFlow(SortOrder.BY_DATE)
     val hideCompleted = MutableStateFlow(false)
+    private val sortOrder = MutableStateFlow(SortOrder.BY_DATE)
+    private val tasksEventChannel = Channel<TasksEvent>()
+    val tasksEvent = tasksEventChannel.receiveAsFlow()
 
     private val tasksFlow = combine(
         searchQuery,
@@ -45,6 +49,19 @@ class TasksViewModel @Inject constructor(private val tasksDao : TasksDao) : View
 
     fun onTaskCheckedChanged(task: Task, isChecked: Boolean) = viewModelScope.launch {
         tasksDao.update(task.copy(completed = isChecked))
+    }
+
+    fun onTaskSwiped(task: Task) = viewModelScope.launch {
+        tasksDao.delete(task)
+        tasksEventChannel.send(TasksEvent.ShowUndoDeleteTaskMessage(task))
+    }
+
+    fun onUndoDeleteClick(task: Task) = viewModelScope.launch {
+        tasksDao.insert(task)
+    }
+
+    sealed class TasksEvent {
+        data class ShowUndoDeleteTaskMessage(val task: Task) : TasksEvent()
     }
 
 }
