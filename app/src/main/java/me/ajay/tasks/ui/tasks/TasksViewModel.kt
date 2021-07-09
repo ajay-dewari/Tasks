@@ -14,6 +14,8 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import me.ajay.tasks.data.Task
 import me.ajay.tasks.data.TasksDao
+import me.ajay.tasks.ui.ADD_TASK_RESULT_OK
+import me.ajay.tasks.ui.EDIT_TASK_RESULT_OK
 import javax.inject.Inject
 
 @HiltViewModel
@@ -68,10 +70,22 @@ class TasksViewModel @Inject constructor(private val tasksDao: TasksDao,
         tasksEventChannel.send(TasksEvent.NavigateToAddTaskScreen)
     }
 
+    fun onAddEditResult(result: Int) {
+        when (result) {
+            ADD_TASK_RESULT_OK -> showTaskSavedConfirmationMessage("Task added")
+            EDIT_TASK_RESULT_OK -> showTaskSavedConfirmationMessage("Task updated")
+        }
+    }
+
+    private fun showTaskSavedConfirmationMessage(text: String) = viewModelScope.launch {
+        tasksEventChannel.send(TasksEvent.ShowTaskSavedConfirmationMessage(text))
+    }
+
     sealed class TasksEvent {
         object NavigateToAddTaskScreen : TasksEvent()
         data class ShowUndoDeleteTaskMessage(val task: Task) : TasksEvent()
         data class NavigateToEditTaskScreen(val task: Task) : TasksEvent()
+        data class ShowTaskSavedConfirmationMessage(val msg: String) : TasksEvent()
     }
 
 }

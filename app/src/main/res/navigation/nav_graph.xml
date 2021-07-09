@@ -8,7 +8,7 @@
     <fragment
         android:id="@+id/tasksFragment"
         android:name="me.ajay.tasks.ui.tasks.TasksFragment"
-        android:label="fragment_tasks"
+        android:label=""
         tools:layout="@layout/fragment_tasks" >
         <action
             android:id="@+id/action_tasksFragment_to_addEditTaskFragment"
