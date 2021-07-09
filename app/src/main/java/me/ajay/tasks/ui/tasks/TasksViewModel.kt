@@ -1,6 +1,8 @@
 package me.ajay.tasks.ui.tasks
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asFlow
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -15,16 +17,18 @@ import me.ajay.tasks.data.TasksDao
 import javax.inject.Inject
 
 @HiltViewModel
-class TasksViewModel @Inject constructor(private val tasksDao: TasksDao) : ViewModel() {
+class TasksViewModel @Inject constructor(private val tasksDao: TasksDao,
+                                         private val state: SavedStateHandle
+) : ViewModel() {
 
-    val searchQuery = MutableStateFlow("")
+    val searchQuery = state.getLiveData("searchQuery", "")
     val hideCompleted = MutableStateFlow(false)
     private val sortOrder = MutableStateFlow(SortOrder.BY_DATE)
     private val tasksEventChannel = Channel<TasksEvent>()
     val tasksEvent = tasksEventChannel.receiveAsFlow()
 
     private val tasksFlow = combine(
-        searchQuery,
+        searchQuery.asFlow(),
         sortOrder,
         hideCompleted
     ) { query, sortOrder, hideCompleted ->
