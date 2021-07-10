@@ -31,4 +31,8 @@
             android:name="title"
             app:argType="string" />
     </fragment>
+    <dialog
+        android:id="@+id/deleteCompletedTasksDialogFragment"
+        android:name="me.ajay.tasks.ui.deletecompletedtasks.DeleteCompletedTasksDialogFragment"
+        android:label="DeleteCompletedTasksDialogFragment" /><action android:id="@+id/action_global_deleteCompletedTasksDialogFragment" app:destination="@id/deleteCompletedTasksDialogFragment"/>
 </navigation>
