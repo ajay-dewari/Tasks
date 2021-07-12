@@ -15,6 +15,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import me.ajay.tasks.R
 import me.ajay.tasks.databinding.FragmentAddEditTaskBinding
+import me.ajay.tasks.utils.exhaustive
 
 @AndroidEntryPoint
 class AddEditTaskFragment : Fragment(R.layout.fragment_add_edit_task) {
@@ -60,7 +61,7 @@ class AddEditTaskFragment : Fragment(R.layout.fragment_add_edit_task) {
                         findNavController().popBackStack()
                     }
 
-                }
+                }.exhaustive
             }
         }
     }
