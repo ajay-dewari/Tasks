@@ -20,6 +20,7 @@ import kotlinx.coroutines.flow.collect
 import me.ajay.tasks.R
 import me.ajay.tasks.data.Task
 import me.ajay.tasks.databinding.FragmentTasksBinding
+import me.ajay.tasks.utils.exhaustive
 import me.ajay.tasks.utils.onQueryTextChanged
 
 @AndroidEntryPoint
@@ -102,7 +103,7 @@ class TasksFragment : Fragment(R.layout.fragment_tasks), TasksAdapter.OnItemClic
                             TasksFragmentDirections.actionGlobalDeleteCompletedTasksDialogFragment()
                         findNavController().navigate(action)
                     }
-                }
+                }.exhaustive
             }
         }
 
